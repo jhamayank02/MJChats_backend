@@ -25,13 +25,11 @@ class chatRoomConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def update_messages_db(self, username, dateTime, message):
-        print(self.room_name)
         newMsg = Message.objects.create(sent_by=username, sent_on=parse(dateTime), msg= message, sent_to_room=self.room_name)
         newMsg.save()
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print(text_data_json)
         message = text_data_json["message"]
         username = text_data_json["username"]
         dateTime = text_data_json["dateTime"]

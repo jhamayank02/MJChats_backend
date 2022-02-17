@@ -11,23 +11,31 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+env = environ.Env()
+# reading .env file
+environ.Env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!-x_txw!q+&-e$%40$n3lhfndy^$mx)*4q3le5yg=z&v3a4f)u'
+# SECRET_KEY = 'django-insecure-!-x_txw!q+&-e$%40$n3lhfndy^$mx)*4q3le5yg=z&v3a4f)u'
+SECRET_KEY = env("SECRET_KEY", default="unsafe-secret-key")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 # CORS_ORIGIN_ALLOW_ALL = DEBUG
 
-ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1:8000']
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,19 +82,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'MJChats_backend.wsgi.application'
 ASGI_APPLICATION = 'MJChats_backend.asgi.application'
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     }
-# }
-
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
-        },
-    },
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
 
 # Database
